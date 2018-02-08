@@ -32,6 +32,7 @@ class resnet(object):
             'SAVE_ITERATION',
             'NUM_LABELS',
             'N_INITIAL_FILTERS',
+            'BATCH_NORMALIZATION',
             'NETWORK_DEPTH',
             'RESIDUAL_BLOCKS_PER_LAYER',
             'LOGDIR',
@@ -222,18 +223,19 @@ class resnet(object):
 
             for j in xrange(self._params['RESIDUAL_BLOCKS_PER_LAYER']):
                 x = residual_block(x, self._params['TRAINING'],
-                                   batch_norm=False,
+                                   batch_norm=self._params['BATCH_NORMALIZATION'],
                                    name="resblock_down_{0}_{1}".format(i, j))
 
             x = downsample_block(x, self._params['TRAINING'],
-                                batch_norm=False,
+                                batch_norm=self._params['BATCH_NORMALIZATION'],
                                 name="downsample_{0}".format(i))
 
 
         # At the bottom, do another residual block:
         for j in xrange(self._params['RESIDUAL_BLOCKS_PER_LAYER']):
             x = residual_block(x, self._params['TRAINING'],
-                batch_norm=False, name="deepest_block_{0}".format(j))
+                batch_norm=self._params['BATCH_NORMALIZATION'],
+                name="deepest_block_{0}".format(j))
 
         # At this point, we ought to have a network that has the same shape as the initial input, but with more filters.
         # We can use a bottleneck to map it onto the right dimensions:

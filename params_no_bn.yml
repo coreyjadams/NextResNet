@@ -3,6 +3,7 @@ NUM_LABELS: 2 # (background, signal)
 N_INITIAL_FILTERS:  12
 NETWORK_DEPTH:  4
 RESIDUAL_BLOCKS_PER_LAYER: 2
+BATCH_NORMALIZATION: True
 # LABEL_NAMES:  ['background', 'signal']
 
 # training parameters:
