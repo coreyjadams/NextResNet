@@ -207,7 +207,7 @@ class resnet(object):
         x = input_placeholder
         # Initial convolution to get to the correct number of filters:
         x = tf.layers.conv3d(x, self._params['N_INITIAL_FILTERS'],
-                             kernel_size=[7, 7, 7],
+                             kernel_size=[5, 5, 5],
                              strides=[1, 1, 1],
                              padding='same',
                              use_bias=False,
