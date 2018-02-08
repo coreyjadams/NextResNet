@@ -3,7 +3,7 @@ NUM_LABELS: 2 # (background, signal)
 N_INITIAL_FILTERS:  12
 NETWORK_DEPTH:  4
 RESIDUAL_BLOCKS_PER_LAYER: 2
-BATCH_NORMALIZATION: True
+BATCH_NORMALIZATION: False
 # LABEL_NAMES:  ['background', 'signal']
 
 # training parameters:
@@ -22,13 +22,14 @@ TRAIN_CONFIG:
     KEYWORD_DATA: 'main_data'
     KEYWORD_LABEL: 'main_label'
 
-# TEST_CONFIG:
-#     CONFIG: 'config/test_io.cfg'
-#     FILLER: 'TrainIO'
-#     VERBOSITY: 3
+TEST_CONFIG:
+    FILE: 'config/test_io.cfg'
+    FILLER: 'TestIO'
+    VERBOSITY: 3
+    KEYWORD_DATA: 'test_data'
+    KEYWORD_LABEL: 'test_label'
 
 
 # General parameters:
 LOGDIR: 'log_uresnet_five_particle/'
 RESTORE: False
-GPU: 0
