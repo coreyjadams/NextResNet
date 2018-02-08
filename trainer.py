@@ -188,12 +188,10 @@ class resnet_trainer(object):
 
             test_label  = self._dataloaders['test'].fetch_data(
                 self._config['TEST_CONFIG']['KEYWORD_LABEL']).data()
-            print test_label.shape
             test_label = numpy.reshape(
                 test_label, self._dataloaders['test'].fetch_data(
                     self._config['TEST_CONFIG']['KEYWORD_LABEL']).dim()
                 )
-            print test_label.shape
 
             test_weight = None
 

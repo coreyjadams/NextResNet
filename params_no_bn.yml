@@ -7,14 +7,14 @@ BATCH_NORMALIZATION: False
 # LABEL_NAMES:  ['background', 'signal']
 
 # training parameters:
-N_MINIBATCH: 1
-MINIBATCH_SIZE: 4
+N_MINIBATCH: 2
+MINIBATCH_SIZE: 32
 SAVE_ITERATION: 500
 REPORT_ITERATION: 10
 SUMMARY_ITERATION: 5
 BASE_LEARNING_RATE:  0.0001
 TRAINING: True
-TRAINING_ITERATIONS: 1
+TRAINING_ITERATIONS: 10000
 TRAIN_CONFIG:
     FILE: './config/train_io.cfg'
     FILLER: 'TrainIO'
@@ -31,5 +31,5 @@ TEST_CONFIG:
 
 
 # General parameters:
-LOGDIR: 'log_uresnet_five_particle/'
+LOGDIR: 'log_uresnet_five_particle/without_bn/'
 RESTORE: False
