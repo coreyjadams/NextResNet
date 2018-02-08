@@ -59,10 +59,11 @@ class resnet_trainer(object):
             self._dataloaders.update({'train' : train_io})
 
         if 'TEST_CONFIG' in self._config:
+            print "here"
             test_io = larcv_threadio()
             test_io_cfg = {'filler_name' : self._config['TEST_CONFIG']['FILLER'],
-                            'verbosity'  : self._config['TEST_CONFIG']['VERBOSITY'],
-                            'filler_cfg' : self._config['TEST_CONFIG']['FILE']}
+                           'verbosity'   : self._config['TEST_CONFIG']['VERBOSITY'],
+                           'filler_cfg'  : self._config['TEST_CONFIG']['FILE']}
             test_io.configure(test_io_cfg)
             test_io.start_manager(self._config['MINIBATCH_SIZE'])
             self._dataloaders.update({'test' : test_io})
@@ -72,7 +73,7 @@ class resnet_trainer(object):
             ana_io_cfg = {'filler_name' : self._config['ANA_CONFIG']['FILLER'],
                           'verbosity'   : self._config['ANA_CONFIG']['VERBOSITY'],
                           'filler_cfg'  : self._config['ANA_CONFIG']['FILE']}
-            ana_io.configure(test_io_cfg)
+            ana_io.configure(ana_io_cfg)
             ana_io.start_manager(self._config['MINIBATCH_SIZE'])
             self._dataloaders.update({'ana' : ana_io})
 
@@ -89,14 +90,14 @@ class resnet_trainer(object):
 
             self._dataloaders['test'].next( store_entries   = (not self._config['TRAINING']),
                                             store_event_ids = (not self._config['TRAINING']))
-            dim_data = self._dataloaders['train'].fetch_data(
+            dim_data = self._dataloaders['test'].fetch_data(
                 self._config['TEST_CONFIG']['KEYWORD_DATA']).dim()
 
         if 'ANA_CONFIG' in self._config:
 
             self._dataloaders['ana'].next(  store_entries   = (not self._config['TRAINING']),
                                             store_event_ids = (not self._config['TRAINING']))
-            dim_data = self._dataloaders['train'].fetch_data(
+            dim_data = self._dataloaders['ana'].fetch_data(
                 self._config['ANA_CONFIG']['KEYWORD_DATA']).dim()
 
 
@@ -180,8 +181,20 @@ class resnet_trainer(object):
             self._dataloaders['test'].next()
             test_data   = self._dataloaders['test'].fetch_data(
                 self._config['TEST_CONFIG']['KEYWORD_DATA']).data()
+            test_data = numpy.reshape(test_data,
+                self._dataloaders['test'].fetch_data(
+                    self._config['TEST_CONFIG']['KEYWORD_DATA']).dim()
+                )
+
             test_label  = self._dataloaders['test'].fetch_data(
-                self._config['TEST_CONFIG']['KEYWORD_DATA']).data()
+                self._config['TEST_CONFIG']['KEYWORD_LABEL']).data()
+            print test_label.shape
+            test_label = numpy.reshape(
+                test_label, self._dataloaders['test'].fetch_data(
+                    self._config['TEST_CONFIG']['KEYWORD_LABEL']).dim()
+                )
+            print test_label.shape
+
             test_weight = None
 
 
@@ -204,8 +217,10 @@ class resnet_trainer(object):
                                                             minibatch_weight),
                                      self._iteration)
             if 'TEST_CONFIG' in self._config:
-                self._writer_test.add_summary(self._net.make_summary(self._sess, test_data, test_label, test_weight),
-                                              self._iteration)
+                self._writer_test.add_summary(
+                    self._net.make_summary(self._sess, test_data,
+                                           test_label, test_weight),
+                    self._iteration)
 
         # Save snapshot
         if checkpt_step:
